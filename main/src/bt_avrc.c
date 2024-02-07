@@ -1,8 +1,8 @@
 #include "bt_avrc.h"
 
+volatile bool avrc_conn=false;
 
-bool avrc_conn=false;
-uint8_t my_bt_speaker_state=ESP_AVRC_PLAYBACK_STOPPED;
+uint8_t bt_speaker_state=ESP_AVRC_PLAYBACK_STOPPED;
 
 esp_avrc_rn_evt_cap_mask_t rn_cap_mask={0};
 
@@ -11,7 +11,7 @@ void callback_bt_avrc(esp_avrc_ct_cb_event_t event, esp_avrc_ct_cb_param_t *para
     char *text;
 
     switch(event) {
-        case ESP_AVRC_CT_CONNECTION_STATE_EVT: //wydarzenie zmiany stanu 
+        case ESP_AVRC_CT_CONNECTION_STATE_EVT: //zmiana stanu połączenia 
         if (param->conn_stat.connected) {
             esp_avrc_ct_send_get_rn_capabilities_cmd(1); //wysłanie powiadomienia do urządenia bt o pobranie event_id powiadomień, które może obsłużyć
             avrc_conn=1;
@@ -27,7 +27,7 @@ void callback_bt_avrc(esp_avrc_ct_cb_event_t event, esp_avrc_ct_cb_param_t *para
                 case ESP_AVRC_RN_VOLUME_CHANGE:
                 break;
                 case ESP_AVRC_RN_PLAY_STATUS_CHANGE:
-                    my_bt_speaker_state = param->change_ntf.event_parameter.playback;
+                    bt_speaker_state = param->change_ntf.event_parameter.playback;
                 break;
                 default:
                 break;

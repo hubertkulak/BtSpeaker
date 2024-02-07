@@ -16,5 +16,6 @@
 #include "esp_avrc_api.h"
 #define TAG "FIRMAo.oSPEAKER"
 
+extern volatile bool avrc_conn;
 
 void callback_bt_avrc(esp_avrc_ct_cb_event_t event, esp_avrc_ct_cb_param_t *param);

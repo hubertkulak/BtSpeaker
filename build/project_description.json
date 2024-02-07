@@ -1,7 +1,7 @@
 {
     "version":            "1",
     "project_name":       "bluetooth",
-    "project_version":    "1",
+    "project_version":    "1c08145-dirty",
     "project_path":       "C:/Users/MSI/bluetooth",
     "idf_path":           "C:/Espressif/frameworks/esp-idf-v5.1.2",
     "build_dir":          "C:/Users/MSI/bluetooth/build",
@@ -790,7 +790,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "C:/Users/MSI/bluetooth/build/esp-idf/main/libmain.a",
-            "sources": [ "C:/Users/MSI/bluetooth/main/src/main.c", "C:/Users/MSI/bluetooth/main/src/bt_avrc.c" ],
+            "sources": [ "C:/Users/MSI/bluetooth/main/src/main.c", "C:/Users/MSI/bluetooth/main/src/bt_avrc.c", "C:/Users/MSI/bluetooth/main/src/bt_a2dp.c", "C:/Users/MSI/bluetooth/main/src/bt_gap.c" ],
             "include_dirs": [ ".", "inc" ]
         },
         "mbedtls": {
