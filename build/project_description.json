@@ -1,7 +1,7 @@
 {
     "version":            "1",
     "project_name":       "bluetooth",
-    "project_version":    "1c08145-dirty",
+    "project_version":    "349c0c0-dirty",
     "project_path":       "C:/Users/MSI/bluetooth",
     "idf_path":           "C:/Espressif/frameworks/esp-idf-v5.1.2",
     "build_dir":          "C:/Users/MSI/bluetooth/build",

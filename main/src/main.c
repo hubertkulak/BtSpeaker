@@ -34,6 +34,7 @@
 #define STOP_BTN 25
 #define DIODA  32
 #define DIODA_DIS 33
+#define GPIO_SD 10
 
 static bool next_state=false;
 static bool last_state=false;
@@ -87,65 +88,23 @@ void app_main(void)
     while(1)
     {
     
-
-    if(avrc_conn)
-    {        
-     vTaskDelay(10);   
-     if(last_state)
-        {
-            esp_avrc_ct_send_passthrough_cmd(1, ESP_AVRC_PT_CMD_FORWARD, ESP_AVRC_PT_CMD_STATE_PRESSED);
-            vTaskDelay(100/portTICK_PERIOD_MS);
-            next_state=false;
-        }
-     if(next_state){
-            esp_avrc_ct_send_passthrough_cmd(1, ESP_AVRC_PT_CMD_BACKWARD, ESP_AVRC_PT_CMD_STATE_PRESSED);
-            vTaskDelay(100/portTICK_PERIOD_MS);
-            last_state=false;
-        }
-    
-    }else{
-        vTaskDelay(10);
-    }
-
+         vTaskDelay(10);
 
     }
+
 
 }
 
-static void next_action(void *param) {
-    if (!next_state) {
-        next_state=true;
-    }
-}
 
-static void last_action(void *param) {
-    if (!last_state) {
-        last_state=true;
-    }
-}
 
 
 void gpio_configuration(void){
     //diody do komunikacji statusu połączenia
     gpio_set_direction(DIODA, GPIO_MODE_OUTPUT);
     gpio_set_direction(DIODA_DIS, GPIO_MODE_OUTPUT);
-
-
-    gpio_set_direction(NEXT_BTN, GPIO_MODE_INPUT);
-    gpio_pullup_en(NEXT_BTN);
-    gpio_set_direction(LAST_BTN, GPIO_MODE_INPUT);
-    gpio_pullup_en(LAST_BTN);
-    gpio_set_direction(STOP_BTN, GPIO_MODE_INPUT);
-  
-
-    gpio_install_isr_service(ESP_INTR_FLAG_EDGE);
-
-    gpio_set_intr_type(NEXT_BTN, GPIO_INTR_NEGEDGE);
-    gpio_isr_handler_add(NEXT_BTN, next_action, 0);
-    gpio_set_intr_type(LAST_BTN, GPIO_INTR_NEGEDGE);
-    gpio_isr_handler_add(LAST_BTN, last_action, 0);
+    gpio_set_direction(GPIO_SD, GPIO_MODE_OUTPUT);
     
-    
+    gpio_set_level(GPIO_SD, 1);
 }
 
 void i2s_configuration(void){
@@ -153,10 +112,10 @@ void i2s_configuration(void){
     esp_err_t err;
    
     i2s_config_t i2sConfiguration = {
-        .mode = I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_DAC_BUILT_IN,                          // Only TX
+        .mode = I2S_MODE_MASTER | I2S_MODE_TX,                          // Only TX
         .sample_rate = 44100,
         .bits_per_sample = 16,
-        .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,                   //2-channels
+        .channel_format = I2S_CHANNEL_STEREO,                   //2-channels
         .communication_format = I2S_COMM_FORMAT_STAND_I2S,              // MAX98357A I2S Philips
         .dma_buf_count = 8,
         .dma_buf_len = 64,
@@ -170,14 +129,14 @@ void i2s_configuration(void){
         ESP_LOGI(TAG, "I2S failed start!");
     }
 
-    /*i2s_pin_config_t i2s_pins_config = {
+    i2s_pin_config_t i2s_pins_config = {
         .bck_io_num = 4,
         .ws_io_num = 5,
         .data_out_num = 18,
         .data_in_num = I2S_PIN_NO_CHANGE             
-    };*/
+    };
     
-    err = i2s_set_pin(0,NULL);
+    err = i2s_set_pin(0,&i2s_pins_config);
 
     if(err != ESP_OK){
         ESP_LOGI(TAG, "I2S pin config fail!");
